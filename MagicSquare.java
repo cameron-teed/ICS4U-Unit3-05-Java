@@ -1,5 +1,5 @@
 /*
-* This program uses recursion to find all the magic 
+* This program uses recursion to find all the magic
 * squares of a 3x3 square in java.
 *
 * @author  Cameron Teed
@@ -49,91 +49,66 @@ final class MagicSquare {
   */
   public static final int FITEN = 15;
   /**
-   * Recursive function runs through all possible random numbers with 9 digits
-   * and picks out all the numbers with more than 1 instance
-   * of the same number.
+   * This function prints a magic square should one be found.
    *
-   * @param magicBox
-   * @param recursionVal
-   * @return genSquare
+   * @param printList
    */
-  public static String genSquare(final int[] magicBox, final int recursionVal) {
-
-    // Nested for loops to run through every number.
-    for (int counter1 = 1; counter1 <= NINE; counter1++) {
-      for (int counter2 = 1; counter2 <= NINE; counter2++) {
-        for (int counter3 = 1; counter3 <= NINE; counter3++) {
-          for (int counter4 = 1; counter4 <= NINE; counter4++) {
-            for (int counter5 = 1; counter5 <= NINE; counter5++) {
-              for (int counter6 = 1; counter6 <= NINE; counter6++) {
-                for (int counter7 = 1; counter7 <= NINE; counter7++) {
-                  for (int counter8 = 1; counter8 <= NINE; counter8++) {
-
-                    // sets counters to array values
-                    magicBox[0] = recursionVal;
-                    magicBox[1] = counter1;
-                    magicBox[2] = counter2;
-                    magicBox[THREE] = counter3;
-                    magicBox[FOUR] = counter4;
-                    magicBox[FIVE] = counter5;
-                    magicBox[SIX] = counter6;
-                    magicBox[SEVEN] = counter7;
-                    magicBox[EIGHT] = counter8;
-
-                    /*
-                    * Eliminates all numbers with more than one instance of the
-                    * same number.
-                    */
-                    if (recursionVal != counter1 && recursionVal != counter2
-                        && recursionVal != counter3 && recursionVal != counter4
-                        && recursionVal != counter5 && recursionVal != counter6
-                        && recursionVal != counter7 && recursionVal != counter8
-                        && counter1 != counter2 && counter1 != counter3
-                        && counter1 != counter4 && counter1 != counter5
-                        && counter1 != counter6 && counter1 != counter7
-                        && counter1 != counter8 && counter2 != counter3
-                        && counter2 != counter4 && counter2 != counter5
-                        && counter2 != counter6 && counter2 != counter7
-                        && counter2 != counter8 && counter3 != counter4
-                        && counter3 != counter5 && counter3 != counter6
-                        && counter3 != counter7 && counter3 != counter8
-                        && counter4 != counter5 && counter4 != counter6
-                        && counter4 != counter7 && counter4 != counter8
-                        && counter5 != counter6 && counter5 != counter7
-                        && counter5 != counter8 && counter6 != counter7
-                        && counter6 != counter8 && counter7 != counter8) {
-
-                      // checks the magic box to determine if its a magic box
-                      if (isMagic(magicBox)) {
-                        // Printing out the square that was found
-                        printMagicSquare(magicBox);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+  static void printSquare(final int[] printList) {
+    // Printing a magic square
+    for (int printCounter = 0; printCounter < printList.length;
+         printCounter++) {
+      System.out.print(printList[printCounter] + " ");
+      // Checking if three numbers are on a line
+      if ((printCounter + 1) % THREE == 0) {
+        System.out.println("");
+      } else {
+        continue;
       }
     }
-
-    // Checks if it found all the magic squares
-    if (recursionVal == NINE) {
-      System.out.print("Done");
-      return ("complete");
-    }
-    // Uses recursion to find the magic box
-    return (genSquare(magicBox, (recursionVal + 1)));
+    System.out.println("*****");
   }
 
   /**
-   * This function checks if its magic.
+   * This function finds and prints all 3 by 3 magic number sets that add to 15.
+   *
+   * @param numberList
+   * @param indexList
+   * @param index
+   */
+  static void solveSquares(final int[] numberList, final int[] indexList,
+                          final int index) {
+    // This loop itterates to fill out a square of numbers
+    for (int counter = 0; counter < numberList.length; counter++) {
+      // Checking if a slot in the square has been occupied
+      if (indexList[counter] == 0) {
+        numberList[counter] = index;
+        indexList[counter] = 1;
+
+        // Checking if the index is less than nine
+        if (index < NINE) {
+          // Calling function again to continue creating square
+          solveSquares(numberList, indexList, index + 1);
+        } else {
+          // Checking if every linear combination of three numbers adds to 15
+          if (isSquareMagic(numberList)) {
+            // Printing out the square that was found
+            printSquare(numberList);
+          }
+        }
+
+        // Reseting part of the square to 0 so it can be filled again
+        indexList[counter] = 0;
+      }
+    }
+  }
+
+  /**
+   * This function determines whether or not a square is a magic square.
    *
    * @param possibleSquare
-   * @return magiNum
+   * @return magicnum
    */
-  public static boolean isMagic(final int[] possibleSquare) {
+  static boolean isSquareMagic(final int[] possibleSquare) {
     // Returns true or false for whether or not inputted array is a magic square
     int magicnum = FITEN;
     int row1 = possibleSquare[0] + possibleSquare[1] + possibleSquare[2];
@@ -156,38 +131,22 @@ final class MagicSquare {
   }
 
   /**
-   * function used to print out the found magic square.
-   *
-   * @param outputSquare
-   */
-  public static void printMagicSquare(final int[] outputSquare) {
-    // prints inputted array in a magic square format
-    System.out.println("*****");
-    for (int count = 0; count < outputSquare.length; count++) {
-      if (count == THREE || count == SIX) {
-        System.out.println();
-        System.out.print(outputSquare[count] + " ");
-      } else {
-        System.out.print(outputSquare[count] + " ");
-      }
-    }
-    System.out.println("\n*****");
-  }
-
-  /**
-   * main function to begin the game.
+   * This function passes variables into a function that will find print all
+   * 3 by 3 magic number sets that add to 15.
    *
    * @param args
    */
   public static void main(final String[] args) {
-    // sets initial values of all 9 segments
-    int[] magicBox = {1, 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE};
+    // Initializing the list that will be used in determining the magic squares
+    int[] firstList = {1, 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE};
+    int[] secondList = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    // sets value of recursive
-    int recursionVal = 1;
-    // calls magicBox function
-    System.out.print("All Possible Magic Squares (3x3):");
-    System.out.print("\n");
-    genSquare(magicBox, recursionVal);
+    // Printing the inital dividing line
+    System.out.println("All Possible Magic Squares (3x3):");
+    System.out.println("*****");
+
+    // Calling the function that will solve the magic squares
+    solveSquares(firstList, secondList, 1);
+    System.out.println("Done");
   }
 }
